@@ -3,10 +3,10 @@ package com.cass.crud_back.controller;
 import com.cass.crud_back.model.Course;
 import com.cass.crud_back.repo.CourseRepo;
 import jakarta.persistence.GeneratedValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,5 +25,12 @@ public class CourseController {
     @GetMapping
     public @ResponseBody List<Course> list() {
         return courseRepo.findAll();
+    }
+
+    @PostMapping
+    //@ResponseStatus(code = HttpStatus.CREATED it's the same as ResponseEntity.status(HttpStatus.CREATED)
+    public ResponseEntity<Course> create(@RequestBody Course course) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(courseRepo.save(course));
     }
 }
