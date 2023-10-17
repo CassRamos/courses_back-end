@@ -27,6 +27,15 @@ public class CourseController {
         return courseRepo.findAll();
     }
 
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Course> findById(@PathVariable Long id) {
+        return courseRepo.findById(id)
+                .map(record -> ResponseEntity.ok().body(record))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+
     @PostMapping
     //@ResponseStatus(code = HttpStatus.CREATED it's the same as ResponseEntity.status(HttpStatus.CREATED)
     public ResponseEntity<Course> create(@RequestBody Course course) {
