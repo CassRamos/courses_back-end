@@ -21,7 +21,7 @@ public class CrudBackApplication {
 
             Course c = new Course();
             c.setName("Angular + Spring");
-            c.setCategory("Back-end");
+            c.setCategory("back-end");
 
             courseRepo.save(c);
         };
