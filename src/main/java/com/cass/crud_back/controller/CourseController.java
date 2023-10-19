@@ -54,4 +54,13 @@ public class CourseController {
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        return courseRepo.findById(id)
+                .map(recordFound -> {
+                    courseRepo.deleteById(id);
+                    return ResponseEntity.noContent().<Void>build(); //Void return type can be replaced by <?> or <Object>, all these values can be a return for delete methods
+                }).orElse(ResponseEntity.notFound().build());
+    }
 }
