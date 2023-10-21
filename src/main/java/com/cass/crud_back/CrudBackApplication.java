@@ -20,8 +20,8 @@ public class CrudBackApplication {
             courseRepo.deleteAll();
 
             Course c = new Course();
-            c.setName("Angular + Spring");
-            c.setCategory("back-end");
+            c.setName("Spring + Angular");
+            c.setCategory("Back-end");
 
             courseRepo.save(c);
         };
