@@ -2,6 +2,7 @@ package com.cass.crud_back.controller;
 
 import com.cass.crud_back.model.Course;
 import com.cass.crud_back.repo.CourseRepo;
+import com.cass.crud_back.service.CourseService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -18,54 +19,44 @@ import java.util.List;
 
 public class CourseController {
 
-    private final CourseRepo courseRepo;
+    private final CourseService courseService;
 
-    public CourseController(CourseRepo courseRepo) {
-        this.courseRepo = courseRepo;
+    public CourseController(CourseService courseService) {
+        this.courseService = courseService;
     }
 
-    //@RequestMapping(method = RequestMethod.GET)
     @GetMapping
     public @ResponseBody List<Course> list() {
-        return courseRepo.findAll();
+        return courseService.list();
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<Course> findById(@PathVariable @NotNull @Positive Long id) {
-        return courseRepo.findById(id)
+        return courseService.findById(id)
                 .map(record -> ResponseEntity.ok().body(record))
                 .orElse(ResponseEntity.notFound().build());
     }
 
-
     @PostMapping
     //@ResponseStatus(code = HttpStatus.CREATED it's the same as ResponseEntity.status(HttpStatus.CREATED)
     public ResponseEntity<Course> create(@RequestBody @Valid Course course) {
-
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(courseRepo.save(course));
+                .body(courseService.create(course));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Course> update(@PathVariable @NotNull @Positive Long id,
                                          @RequestBody @Valid Course course) {
-        return courseRepo.findById(id)
-                .map(recordFound -> {
-                    recordFound.setName(course.getName());
-                    recordFound.setCategory(course.getCategory());
-                    Course updated = courseRepo.save(recordFound);
-                    return ResponseEntity.ok().body(updated);
-                })
+        return courseService.update(id, course)
+                .map(recordFound -> ResponseEntity.ok().body(recordFound))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable @NotNull @Positive Long id) {
-        return courseRepo.findById(id)
-                .map(recordFound -> {
-                    courseRepo.deleteById(id);
-                    return ResponseEntity.noContent().<Void>build(); //Void return type can be replaced by <?> or <Object>, all these values can be a return for delete methods
-                }).orElse(ResponseEntity.notFound().build());
+        if (courseService.delete(id)) {
+            return ResponseEntity.noContent().<Void>build(); //Void return type can be replaced by <?> or <Object>, all these values can be a return for delete methods
+        }
+        return ResponseEntity.notFound().build();
     }
 }
