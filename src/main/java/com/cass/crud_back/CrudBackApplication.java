@@ -1,11 +1,14 @@
 package com.cass.crud_back;
 
+import com.cass.crud_back.enums.Category;
 import com.cass.crud_back.model.Course;
 import com.cass.crud_back.repo.CourseRepo;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import java.util.Locale;
 
 @SpringBootApplication
 public class CrudBackApplication {
@@ -21,7 +24,7 @@ public class CrudBackApplication {
 
             Course c = new Course();
             c.setName("Spring + Angular");
-            c.setCategory("Back-end");
+            c.setCategory(Category.BACK_END);
 
             courseRepo.save(c);
         };
