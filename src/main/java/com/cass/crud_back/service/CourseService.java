@@ -1,7 +1,8 @@
 package com.cass.crud_back.service;
 
+import com.cass.crud_back.dto.CourseDTO;
+import com.cass.crud_back.dto.mapper.CourseMapper;
 import com.cass.crud_back.exception.RecordNotFoundException;
-import com.cass.crud_back.model.Course;
 import com.cass.crud_back.repo.CourseRepo;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -11,38 +12,45 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Validated
 @Service
 public class CourseService {
 
     private final CourseRepo courseRepo;
+    private final CourseMapper courseMapper;
 
-    public CourseService(CourseRepo courseRepo) {
+    public CourseService(CourseRepo courseRepo, CourseMapper courseMapper) {
         this.courseRepo = courseRepo;
+        this.courseMapper = courseMapper;
     }
 
-    public List<Course> list() {
-        return courseRepo.findAll();
+    public List<CourseDTO> list() {
+        return courseRepo.findAll()
+                .stream()
+                .map(courseMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public Course findById(@PathVariable @NotNull @Positive Long id) {
+    public CourseDTO findById(@PathVariable @NotNull @Positive Long id) {
         return courseRepo
                 .findById(id)
+                .map(courseMapper::toDTO)
                 .orElseThrow(() -> new RecordNotFoundException(id));
     }
 
-    public Course create(@Valid Course course) {
-        return courseRepo.save(course);
+    public CourseDTO create(@Valid @NotNull CourseDTO course) {
+        return courseMapper.toDTO(courseRepo.save(courseMapper.toEntity(course)));
     }
 
-    public Course update(@NotNull @Positive Long id,
-                         @Valid Course course) {
+    public CourseDTO update(@NotNull @Positive Long id,
+                            @Valid @NotNull CourseDTO course) {
         return courseRepo.findById(id)
                 .map(recordFound -> {
-                    recordFound.setName(course.getName());
-                    recordFound.setCategory(course.getCategory());
-                    return courseRepo.save(recordFound);
+                    recordFound.setName(course.name());
+                    recordFound.setCategory(course.category());
+                    return courseMapper.toDTO(courseRepo.save(recordFound));
                 }).orElseThrow(() -> new RecordNotFoundException(id));
     }
 
