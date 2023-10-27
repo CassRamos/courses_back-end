@@ -2,6 +2,7 @@ package com.cass.crud_back;
 
 import com.cass.crud_back.enums.Category;
 import com.cass.crud_back.model.Course;
+import com.cass.crud_back.model.Lesson;
 import com.cass.crud_back.repo.CourseRepo;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -25,6 +26,12 @@ public class CrudBackApplication {
             Course c = new Course();
             c.setName("Spring + Angular");
             c.setCategory(Category.BACK_END);
+
+            Lesson l = new Lesson();
+            l.setName("Intro");
+            l.setYoutubeUrl("watch:?=1");
+            l.setCourse(c);
+            c.getLessons().add(l);
 
             courseRepo.save(c);
         };
