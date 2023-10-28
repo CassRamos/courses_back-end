@@ -1,9 +1,13 @@
 package com.cass.crud_back.dto.mapper;
 
 import com.cass.crud_back.dto.CourseDTO;
+import com.cass.crud_back.dto.LessonDTO;
 import com.cass.crud_back.enums.Category;
 import com.cass.crud_back.model.Course;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class CourseMapper {
@@ -11,11 +15,14 @@ public class CourseMapper {
         if (course == null) {
             return null;
         }
-        return new CourseDTO(
-                course.getId(),
-                course.getName(),
-                course.getCategory().getValue(),
-                course.getLessons());
+        List<LessonDTO> lessons = course.getLessons()
+                .stream()
+                .map(lesson -> new LessonDTO(
+                        lesson.getId(),
+                        lesson.getName(),
+                        lesson.getYoutubeUrl()
+                )).collect(Collectors.toList());
+        return new CourseDTO(course.getId(), course.getName(), course.getCategory().getValue(), lessons);
     }
 
     public Course toEntity(CourseDTO courseDTO) {
