@@ -29,7 +29,7 @@ public class CrudBackApplication {
 
             Lesson l = new Lesson();
             l.setName("Intro");
-            l.setYoutubeUrl("watch:?=1");
+            l.setYoutubeUrl("watch:?=www");
             l.setCourse(c);
             c.getLessons().add(l);
 

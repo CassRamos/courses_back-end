@@ -4,6 +4,7 @@ import com.cass.crud_back.dto.CourseDTO;
 import com.cass.crud_back.dto.mapper.CourseMapper;
 import com.cass.crud_back.exception.RecordNotFoundException;
 import com.cass.crud_back.model.Course;
+import com.cass.crud_back.model.Lesson;
 import com.cass.crud_back.repo.CourseRepo;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -53,7 +54,12 @@ public class CourseService {
                     recordFound.setCategory(courseMapper.convertCategoryValue(courseDTO.category()));
 
                     recordFound.getLessons().clear();
-                    course.getLessons().forEach(recordFound.getLessons()::add);
+
+                    for (Lesson lesson : course.getLessons()) {
+                        lesson.setCourse(recordFound); // Set the course reference for the lesson to the updated course
+                        recordFound.getLessons().add(lesson); // Set the course reference for the lesson to the updated course
+                    }
+
                     return courseMapper.toDTO(courseRepo.save(recordFound));
                 }).orElseThrow(() -> new RecordNotFoundException(id));
     }
