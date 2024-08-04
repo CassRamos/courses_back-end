@@ -49,6 +49,24 @@ This project is under license from MIT
 
 <br>
 
+### Get courses by page
+ - <p> To retrieve all registered courses on a specific page, with a determined page size, use the following command: </p>
+ 
+```sh
+  curl -X GET http://localhost:8080/api/courses?page=0&pageSize=10
+```
+
+<br>
+
+### Get courses by id
+ - <p> To retrieve a specific course, use the following command. The number after `courses/` is the ID of the course: </p>
+ 
+```sh
+  curl -X GET http://localhost:8080/api/courses/1
+```
+
+<br>
+
 ### Register a course
  - <p> To register a course, you can use this JSON model: </p>
  
@@ -85,6 +103,55 @@ curl -X POST http://localhost:8080/api/courses \
         }
     ]
 }
+```
+
+<br>
+
+### Update a course
+ - <p> To update a course, you can use this JSON model. The number after `courses/` is the ID of the course: </p>
+ 
+```sh
+curl -X PUT http://localhost:8080/api/courses/2 \
+     -H "Content-Type: application/json" \
+     -d {
+            "name": "Spring + Angular + Postman",
+            "category": "Back-end",
+            "lessons":
+            [
+                {
+                "name": "Some lesson 2",
+                "youtubeUrl":"watchl.com"
+                }
+            ]
+        }
+```
+
+<br>
+
+<p> this must be the received response: </p>
+
+```json
+{
+    "_id": 2,
+    "name": "Spring + Angular + Postman",
+    "category": "Back-end",
+    "lessons": [
+        {
+            "id": 3,
+            "name": "Some lesson 2",
+            "youtubeUrl": "watchl.com"
+        }
+    ]
+}
+```
+
+<br>
+
+### Delete course
+ - <p> To delete a specific course, use the following command. The number after `courses/` is the ID of the course: </p>
+ 
+```sh
+  curl -X DELETE http://localhost:8080/api/courses/1
 ```
 
 <br>
